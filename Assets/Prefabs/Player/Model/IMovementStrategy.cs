@@ -1,7 +1,11 @@
 using System;
 using UnityEngine;
 
-public interface IMovementStrategy
+public class SmoothMovement : IMovementStrategy
 {
-    public void Move(Transform transform, float speed);
+    public void Move(Transform transform, float speed)
+    {
+        float moveInX = Input.GetAxis("horizontal") * speed * Time.deltaTime;
+        transform.Translate(moveInX, 0, 0);
+    }
 }
