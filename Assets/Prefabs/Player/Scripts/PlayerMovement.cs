@@ -1,7 +1,5 @@
-// PlayerMovement.cs
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
     private Vector3 fuerzaAAplicar;
@@ -10,13 +8,10 @@ public class PlayerMovement : MonoBehaviour
 
     private float speed;
     private IMovementStrategy movementStrategy;
-    private Rigidbody rb;
 
     private void Start()
     {
-        rb = GetComponent<Rigidbody>();
-
-        fuerzaAAplicar = new Vector3(0f, 0f, 300f);
+        fuerzaAAplicar = new Vector3(0, 0, 300);
         tiempoEntreUltimasFuerzas = 0f;
         tiempoIntervalo = 2f;
 
@@ -32,12 +27,12 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     {
         MovePlayer();
+        ChangeMovementStrategy();
     }
 
     public void MovePlayer()
     {
-        if (movementStrategy != null)
-            movementStrategy.Move(transform, speed);
+        movementStrategy?.Move(transform, speed);
     }
 
     private void FixedUpdate()
@@ -45,8 +40,20 @@ public class PlayerMovement : MonoBehaviour
         tiempoEntreUltimasFuerzas += Time.fixedDeltaTime;
         if (tiempoEntreUltimasFuerzas >= tiempoIntervalo)
         {
-            rb.AddForce(fuerzaAAplicar);
+            gameObject.GetComponent<Rigidbody>().AddForce(fuerzaAAplicar);
             tiempoEntreUltimasFuerzas = 0f;
+        }
+    }
+
+    private void ChangeMovementStrategy()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            SetMovementStrategy(new SmoothMovement());
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            SetMovementStrategy(new AcelerateMovement());
         }
     }
 }
