@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private PlayerMovement playerMovement;
+    public PlayerMovement playerMovement;
     private ICommand moveCommand;
     private ICommand aceleratedMoveCommand;
 
     private void Start()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
-        if (playerMovement == null)
         moveCommand = new MoveCommand(playerMovement);
         aceleratedMoveCommand = new AceleratedMoveCommand(playerMovement);
     }
