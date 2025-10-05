@@ -16,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
         tiempoIntervalo = 2f;
 
         speed = 5f;
+
         SetMovementStrategy(new SmoothMovement());
     }
 
@@ -24,36 +25,24 @@ public class PlayerMovement : MonoBehaviour
         this.movementStrategy = movementStrategy;
     }
 
-    private void Update()
+    public void MovePlayer(float direction)
     {
-        MovePlayer();
-        ChangeMovementStrategy();
-    }
-
-    public void MovePlayer()
-    {
-        movementStrategy?.Move(transform, speed);
+        movementStrategy?.Move(transform, speed, direction);
     }
 
     private void FixedUpdate()
     {
+
         tiempoEntreUltimasFuerzas += Time.fixedDeltaTime;
         if (tiempoEntreUltimasFuerzas >= tiempoIntervalo)
         {
-            gameObject.GetComponent<Rigidbody>().AddForce(fuerzaAAplicar);
+            var rb = gameObject.GetComponent<Rigidbody>();
+            if (rb != null)
+            {
+                rb.AddForce(fuerzaAAplicar);
+            }
             tiempoEntreUltimasFuerzas = 0f;
         }
     }
 
-    private void ChangeMovementStrategy()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            SetMovementStrategy(new SmoothMovement());
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            SetMovementStrategy(new AcelerateMovement());
-        }
-    }
 }
